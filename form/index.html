@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OSS Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css"/>
+    <style>
+        label {
+            width: 100px;
+        }
+        label.error {
+            color: red;
+        }
+        input {
+            border : 1px solid #ccc;
+        }
+        input.error {
+            border-color: red;
+        }
+        .content {
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        .val__error {
+          color: red;
+        }
+        input:focus {
+          outline: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="content">
+                <form onsubmit="return(myForm())" id="testForm">
+                    <div>
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName"/>
+                        <div id="firstName_error" class="val__error"></div>
+                    </div>
+
+                    <div>
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName"/>
+                        <div id="lastName_error" class="val__error"></div>
+                    </div>
+
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="text" id="email"/>
+                        <div id="email_error" class="val__error"></div>
+                    </div>
+
+                    <button id="mySubmit" type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const myName = document.querySelector('#firstName');
+    const lastName = document.querySelector('#lastName');
+    const email = document.querySelector('#email');
+    const testForm = document.querySelector('#testForm');
+
+    // Getting all error display objects
+    const name_error = document.querySelector('#firstName_error');
+    const lastName_error = document.querySelector('#lastName_error');
+    const email_error = document.querySelector('#email_error');
+
+    const req = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+
+    const send = document.querySelector('#mySubmit');
+
+    // Setting all event listeners
+    myName.addEventListener('blur', nameVerify, true);
+    lastName.addEventListener('blur', lastNameVerify, true);
+    email.addEventListener('blur', emailVerify, true);
+    send.addEventListener('click', myForm);
+
+    function myForm (e) {
+      e.preventDefault();
+      validate();
+    }
+
+    function validate() {
+      // name validation
+      if (myName.value == '') {
+        myName.classList.add('error');
+        name_error.innerHTML = 'NAME IS REQUIRED';
+        myName.focus();
+        return false;
+      }
+      // surname validation
+      if (lastName.value == '') {
+        lastName.classList.add('error');
+        lastName_error.innerHTML = 'SURNAME IS REQUIRED';
+        lastName.focus();
+        return false;
+      }
+      // email validation
+      if (email.value == '') {
+        email.classList.add('error');
+        email_error.innerHTML = 'EMAIL IS REQUIRED';
+        email.focus();
+        return false;
+      }
+      // email validation
+      if (req.test(email.value) == false) {
+        email.classList.add('error');
+        email_error.innerHTML = 'Please insert valid email';
+        email.focus();
+        return false;
+      }
+      else {
+        email.classList.remove('error');
+        email_error.innerHTML = '';
+        cleanInput();
+        alert('Success');
+        return true
+      }
+    }
+
+    // event handler functions
+    function nameVerify() {
+      if (myName.value != '') {
+        myName.classList.remove('error');
+        name_error.innerHTML = '';
+        return true;
+      } else {
+          myName.classList.add('error');
+          name_error.innerHTML = 'NAME IS REQUIRED';
+          myName.focus();
+          return false;
+      }
+    }
+
+    function lastNameVerify() {
+      if (lastName.value != '') {
+        lastName.classList.remove('error');
+        lastName_error.innerHTML = '';
+        return true;
+      } else {
+          lastName.classList.add('error');
+          lastName_error.innerHTML = 'SURNAME IS REQUIRED';
+          lastName.focus();
+          return false;
+      }
+    }
+
+    function emailVerify() {
+      if (!email.value) {
+        email.classList.add('error');
+        email_error.innerHTML = 'EMAIL IS REQUIRED';
+        email.focus();
+        return false;
+      }
+      if (req.test(email.value) == false) {
+        email.classList.add('error');
+        email_error.innerHTML = 'Please insert valid email';
+        email.focus();
+        return false;
+
+      } else {
+        email.classList.remove('error');
+        email_error.innerHTML = '';
+        return true;
+        }
+    }
+
+    // Clean all inputs
+    function cleanInput() {
+      myName.value = '';
+      lastName.value = '';
+      email.value = '';
+    }
+</script>
+
+</body>
+</html>
